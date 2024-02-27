@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Lamine TOURE">
+        <link rel="canonical" href="https://LamineTourelab.github.io/user-guide/Explainable%20AI/Xray_classification_with_densenet121_and_gradcam/Xray_classification_with_densenet121_and_gradcam/">
+        <link rel="shortcut icon" href="../../../../img/favicon.ico">
+        <title>Chest X Ray Images classification with DenseNet121 and explain with GradCam - LamineTourelab</title>
+        <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/color-brewer.min.css">
+        <link href="../../../../style.css" rel="stylesheet">
+        <link href="../../../../css/base.css" rel="stylesheet">
+        <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../../css/font-awesome.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python3.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../../..">LamineTourelab</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../../USER_GUIDE_INDEX/" class="dropdown-item">User Guide Index</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Bioinformatics <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../Bioinformatics/SingleCellData/RNA_Velocity_analysis_scVelo/" class="dropdown-item">RNA Velocity analysis with scVelo</a>
+</li>
+                                    
+<li>
+    <a href="../../../Bioinformatics/SingleCellData/SingleCellData_Preprocessing_with_scanpy/" class="dropdown-item">SingleCell Data Preprocessing with scanpy</a>
+</li>
+                                    
+<li>
+    <a href="../../../Bioinformatics/SingleCellData/Trajectory_inference_With_CellRank/Trajectory_inference_With_CellRank/" class="dropdown-item">Trajectory inference With CellRank</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Machine learning <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../Machine%20learning/Autoencoder/Autoencoder/" class="dropdown-item">Introduction to Autoencoder</a>
+</li>
+                                    
+<li>
+    <a href="../../../Machine%20learning/DecisionTrees_using_iris_dataset/DecisionTrees_using_iris_dataset/" class="dropdown-item">Decision Trees using iris dataset</a>
+</li>
+                                    
+<li>
+    <a href="../../../Machine%20learning/Transfer_learning_using_VGG16/Transfer_learning_using_VGG16/" class="dropdown-item">Transfer learning using VGG16</a>
+</li>
+                                    
+<li>
+    <a href="../../../Machine%20learning/tensorflow_API_tutorial/tensorflow_API_tutorial/" class="dropdown-item">Introduction to tensorflow API tutorial</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Explainable AI <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../explainability_shap%26lime/explainability_shap%26lime/" class="dropdown-item">Explain xgboot model using shap and lime</a>
+</li>
+                                    
+<li>
+    <a href="../../Explainable_tensorflow_model_using_Shap_and_model_weights/Explainable_tensorflow_model_using_Shap_and_model_weights/" class="dropdown-item">Explain tensorflow model using Shap and Model Weights</a>
+</li>
+                                    
+<li>
+    <a href="../../Explainable_tensorflow_multiclass_model_using_Shap_and_model_weights/Explainable_tensorflow_multiclass_model_using_Shap_and_model_weights/" class="dropdown-item">Explainable tensorflow multiclass model using Shap and model weights</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active">Chest X Ray Images classification with DenseNet121 and explain with GradCam</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../../about/release-notes/" class="dropdown-item">Release Notes</a>
+</li>
+                                    
+<li>
+    <a href="../../../../about/contributing/" class="dropdown-item">Contributing</a>
+</li>
+                                    
+<li>
+    <a href="../../../../about/license/" class="dropdown-item">License</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a rel="prev" href="../../Explainable_tensorflow_multiclass_model_using_Shap_and_model_weights/Explainable_tensorflow_multiclass_model_using_Shap_and_model_weights/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../../../../about/release-notes/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/LamineTourelab/Tutorial/tree/main/user-guide/Explainable AI/Xray_classification_with_densenet121_and_gradcam/Xray_classification_with_densenet121_and_gradcam.md" class="nav-link"><i class="fa fa-github"></i> Edit on GitHub</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#chest-x-ray-images-classification-with-densenet121-and-explain-with-gradcam" class="nav-link">Chest X Ray Images classification with DenseNet121 and explain with GradCam</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#data-loading-from-path" class="nav-link">Data loading from path</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#functions" class="nav-link">Functions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#data-visualization" class="nav-link">Data visualization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#image-preprocessing-and-augmentation-with-keras" class="nav-link">Image preprocessing and augmentation with Keras</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#model" class="nav-link">Model</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#model-train" class="nav-link">Model train</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#model-evaluate" class="nav-link">Model evaluate</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#label-prediction" class="nav-link">Label Prediction</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#model-explain-with-gradcam" class="nav-link">Model explain with GradCam</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#normal-label" class="nav-link">Normal Label</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#covid19-label" class="nav-link">Covid19 label</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#pneumonia-label" class="nav-link">Pneumonia label</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="chest-x-ray-images-classification-with-densenet121-and-explain-with-gradcam">Chest X Ray Images classification with DenseNet121 and explain with GradCam<a class="headerlink" href="#chest-x-ray-images-classification-with-densenet121-and-explain-with-gradcam" title="Permanent link"></a></h1>
+<pre class="highlight"><code class="language-python">import os
+import numpy as np 
+import pandas as pd 
+import sklearn
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib.image as mpimg
+from PIL import Image
+from sklearn.model_selection import train_test_split
+import tensorflow as tf
+from tensorflow import keras
+
+from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
+from keras.applications.densenet import DenseNet121
+from keras.layers import Dense, GlobalAveragePooling2D
+from keras.models import Model, load_model
+
+import cv2
+import glob
+
+import warnings
+warnings.filterwarnings('ignore')
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)</code></pre>
+<h1 id="data-loading-from-path">Data loading from path<a class="headerlink" href="#data-loading-from-path" title="Permanent link"></a></h1>
+<p>The dataset used was downloading form kaggle, here is <a href="https://www.kaggle.com/datasets/francismon/curated-covid19-chest-xray-dataset">the link</a></p>
+<pre class="highlight"><code class="language-python"># for dirname, _, filenames in os.walk('/Users/lamine/tensorflow-test/dataset/'):
+#     for filename in filenames:
+#         print(os.path.join(dirname, filename))</code></pre>
+<pre class="highlight"><code class="language-python">image_dir = '/Users/lamine/tensorflow-test/dataset'
+dir_train = f'{image_dir}/train'
+dir_valid = f'{image_dir}/validation'</code></pre>
+<h1 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link"></a></h1>
+<p>Can be used as <code>util.py</code> file. </p>
+<p>The gradcam function is adated fron <a href="https://gist.github.com/RaphaelMeudec/e9a805fa82880876f8d89766f0690b54">here</a></p>
+<pre class="highlight"><code class="language-python">import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+from keras.models import Model
+from keras.preprocessing import image
+from sklearn.metrics import roc_auc_score, roc_curve
+from tensorflow.compat.v1.logging import INFO, set_verbosity
+from keras.utils import to_categorical   
+import os
+
+random.seed(a=None, version=2)
+
+set_verbosity(INFO)
+
+
+def get_mean_std_per_batch(image_dir, H=299, W=299):
+    sample_data = []
+    for img in train_generator.filepaths:
+        raw_image = cv2.imread(img)
+        sample_data.append(
+            np.array(image.load_img(img, target_size=(H, W))))
+
+    mean = np.mean(sample_data, axis=(0, 1, 2, 3))
+    std = np.std(sample_data, axis=(0, 1, 2, 3), ddof=1)
+    return mean, std
+
+
+def load_image(img, image_dir, preprocess=True, H=299, W=299):
+    """Load and preprocess image."""
+    mean, std = get_mean_std_per_batch(image_dir, H=H, W=W)
+    img_path = os.path.join(image_dir, img)
+    x = image.load_img(img_path, target_size=(H, W))
+    if preprocess:
+        x -= mean
+        x /= std
+        x = np.expand_dims(x, axis=0)
+    return x
+
+def grad_cam(model, img, layer_name):
+
+    grad_model = Model([model.inputs], [model.get_layer(layer_name).output, model.output])
+
+    with tf.GradientTape() as tape:
+        conv_outputs, predictions = grad_model(np.array([img]))
+        pred_class = tf.argmax(predictions[0])
+        loss = predictions[:, pred_class]
+
+    output = conv_outputs[0]
+    grads = tape.gradient(loss, conv_outputs)[0]
+
+    gate_f = tf.cast(output &gt; 0, 'float32')
+    gate_r = tf.cast(grads &gt; 0, 'float32')
+    guided_grads = tf.cast(output &gt; 0, 'float32') * tf.cast(grads &gt; 0, 'float32') * grads
+
+    weights = tf.reduce_mean(guided_grads, axis=(0, 1))
+
+    cam = np.ones(output.shape[0: 2], dtype = np.float32)
+
+    for i, w in enumerate(weights):
+        cam += w * output[:, :, i]
+
+    cam = cv2.resize(cam.numpy(), (299, 299))
+    cam = np.maximum(cam, 0)
+    heatmap = (cam - cam.min()) / (cam.max() - cam.min())
+
+    cam = cv2.applyColorMap(np.uint8(255*heatmap), cv2.COLORMAP_JET)
+
+    output_image = cv2.addWeighted(cv2.cvtColor(img.astype('uint8'), cv2.COLOR_RGB2BGR), 0.5, cam, 1, 0)
+
+    return output_image
+
+
+def compute_gradcam(model, img, image_dir, labels, selected_labels,
+                    layer_name='bn'):
+    img_path = os.path.join(image_dir, img)
+    image = load_image(img, image_dir)
+    predictions = model.predict(image)
+    img = cv2.imread(img_path)
+    print("Loading original image")
+    plt.figure(figsize=(15, 10))
+    plt.subplot(151)
+    plt.title("Original")
+    plt.axis('off')
+    plt.imshow(img, cmap='gray')
+
+    j = 1
+    for i in range(len(labels)):
+        if labels[i] in selected_labels:
+            print(f"Generating gradcam for class {labels[i]}")
+            gradcam = grad_cam(model, img, layer_name)
+            plt.subplot(151 + j)
+            plt.title(f"{labels[i]}: p={predictions[0][i]:.3f}")
+            plt.axis('off')
+            plt.imshow(img, cmap='gray')
+            plt.imshow(gradcam, cmap='jet', alpha=min(0.5, predictions[0][i]))
+            j += 1
+
+
+def get_roc_curve(labels, predicted_vals, generator):
+    auc_roc_vals = []
+    for i in range(len(labels)):
+        try:
+            categorical_labels = to_categorical(generator.labels, num_classes=3)
+            gt = categorical_labels[:, i]
+            pred = predicted_vals[:, i]
+            auc_roc = roc_auc_score(gt, pred)
+            auc_roc_vals.append(auc_roc)
+            fpr_rf, tpr_rf, _ = roc_curve(gt, pred)
+            plt.figure(1, figsize=(10, 10))
+            plt.plot([0, 1], [0, 1], 'k--')
+            plt.plot(fpr_rf, tpr_rf,
+                     label=labels[i] + " (" + str(round(auc_roc, 3)) + ")")
+            plt.xlabel('False positive rate')
+            plt.ylabel('True positive rate')
+            plt.title('ROC curve')
+            plt.legend(loc='best')
+        except:
+            print(
+                f"Error in generating ROC curve for {labels[i]}. "
+                f"Dataset lacks enough examples."
+            )
+    plt.show()
+    return auc_roc_vals</code></pre>
+<h1 id="data-visualization">Data visualization<a class="headerlink" href="#data-visualization" title="Permanent link"></a></h1>
+<pre class="highlight"><code class="language-python">plt.figure(figsize=(20 , 15))
+for i in np.arange(1,6):
+    plt.subplot(5, 5, i)
+    plt.subplots_adjust(hspace = 0.5 , wspace = 0.3)
+    # Normal
+    dir_img = f'{dir_train}/0_Normal/Normal ({i}).jpg'
+    img = cv2.imread(dir_img)
+    plt.imshow(img) 
+    plt.title('Normal X-Ray')</code></pre>
+<p><img alt="png" src="../output_10_0.png" /></p>
+<pre class="highlight"><code class="language-python">plt.figure(figsize=(20 , 15))
+for i in np.arange(1,6):
+    plt.subplot(5, 5, i)
+    plt.subplots_adjust(hspace = 0.5 , wspace = 0.3)
+    # COVID-19
+    dir_img = f'{dir_train}/1_Covid19/COVID-19 ({i}).jpg'
+    img = cv2.imread(dir_img)
+    plt.imshow(img) 
+    plt.title('COVID19 X-Ray')</code></pre>
+<p><img alt="png" src="../output_11_0.png" /></p>
+<pre class="highlight"><code class="language-python">plt.figure(figsize=(20 , 15))
+for i in np.arange(1,6):
+    plt.subplot(5, 5, i)
+    plt.subplots_adjust(hspace = 0.5 , wspace = 0.3)
+    # Pneumonia-Bacterial
+    dir_img = f'{dir_train}/2_Pneumonia/Pneumonia-Bacterial ({i}).jpg'
+    img = cv2.imread(dir_img)
+    plt.imshow(img) 
+    plt.title('Pneumonia X-Ray')</code></pre>
+<p><img alt="png" src="../output_12_0.png" /></p>
+<h3 id="raw-single-image">Raw single image<a class="headerlink" href="#raw-single-image" title="Permanent link"></a></h3>
+<pre class="highlight"><code class="language-python"># Get the first image that was listed in the train_df dataframe
+sample_img =  f'{dir_train}/0_Normal/Normal ({775}).jpg'
+raw_image = plt.imread(sample_img)
+plt.imshow(raw_image, cmap='gray')
+plt.colorbar()
+plt.title('Raw Chest X Ray Image')
+print(f"The dimensions of the image are {raw_image.shape[0]} pixels width and {raw_image.shape[1]} pixels height, one single color channel")
+print(f"The maximum pixel value is {raw_image.max():.3f} and the minimum is {raw_image.min():.3f}")
+print(f"The mean value of the pixels is {raw_image.mean():.3f} and the standard deviation is {raw_image.std():.3f}")</code></pre>
+<pre class="highlight"><code>The dimensions of the image are 299 pixels width and 299 pixels height, one single color channel
+The maximum pixel value is 253.000 and the minimum is 0.000
+The mean value of the pixels is 113.239 and the standard deviation is 67.740</code></pre>
+<p><img alt="png" src="../output_14_1.png" /></p>
+<pre class="highlight"><code class="language-python"># Plot a histogram of the distribution of the pixels
+sns.distplot(raw_image.ravel(), 
+             label=f'Pixel Mean {np.mean(raw_image):.3f} &amp; Standard Deviation {np.std(raw_image):.3f}', kde=False)
+plt.legend(loc='upper center')
+plt.title('Distribution of Pixel Intensities in the Image')
+plt.xlabel('Pixel Intensity')
+plt.ylabel('# Pixels in Image')</code></pre>
+<pre class="highlight"><code>Text(0, 0.5, '# Pixels in Image')</code></pre>
+<p><img alt="png" src="../output_15_1.png" /></p>
+<pre class="highlight"><code class="language-python"># Get the image shape and print it out
+height, width, channels = raw_image.shape
+print(f"The image object has the following dimensions: height: {height}, width: {width}, channels: {channels}")</code></pre>
+<pre class="highlight"><code>The image object has the following dimensions: height: 299, width: 299, channels: 3</code></pre>
+<h1 id="image-preprocessing-and-augmentation-with-keras">Image preprocessing and augmentation with Keras<a class="headerlink" href="#image-preprocessing-and-augmentation-with-keras" title="Permanent link"></a></h1>
+<pre class="highlight"><code class="language-python">CLASSES = ['0_Normal', '1_Covid19', '2_Pneumonia']</code></pre>
+<pre class="highlight"><code class="language-python">def get_generator(image_dir, subset=' ', classes = CLASSES, shuffle=True, batch_size=32, seed=1, target_w = 299, target_h = 299):
+    """
+    Return generator for training set, normalizing using batch
+    statistics.
+
+    Args:
+      image_dir (str): directory where image files are held.
+      batch_size (int): images per batch to be fed into model during training.
+      seed (int): random seed.
+      target_w (int): final width of input images.
+      target_h (int): final height of input images.
+      classes (str): list of labels images
+
+    Returns:
+        train_generator or validation_generator (DataFrameIterator): iterator over training set
+    """     
+    print("getting generators from path...") 
+    # normalize images
+    image_generator = ImageDataGenerator(
+        samplewise_center=True,
+        samplewise_std_normalization= True,
+        validation_split=0.30)
+
+    # flow from directory with specified batch size
+    # and target image size
+    generator = image_generator.flow_from_directory(
+            directory=image_dir,
+            class_mode='categorical',
+            classes=CLASSES,
+            batch_size=batch_size,
+            shuffle=shuffle,
+            seed=seed,
+            subset= subset,
+            target_size=(target_w,target_h))
+
+    return generator</code></pre>
+<pre class="highlight"><code class="language-python">train_generator = get_generator(dir_train, subset='training')
+validation_generator = get_generator(dir_train, subset='validation')
+test_generator = get_train_generator(dir_valid, subset='validation')</code></pre>
+<pre class="highlight"><code>getting generators from path...
+Found 5159 images belonging to 3 classes.
+getting generators from path...
+Found 2208 images belonging to 3 classes.
+getting train and validation generator...
+Found 551 images belonging to 3 classes.</code></pre>
+<pre class="highlight"><code class="language-python">print(f"There are {train_generator.samples} images belonging to the {len(CLASSES)} classes for model training")
+print(f"There are {validation_generator.samples} images belonging to the {len(CLASSES)} classes for model validation")
+print(f"There are {test_generator.samples} images belonging to the {len(CLASSES)} classes for model testing")</code></pre>
+<pre class="highlight"><code>There are 5159 images belonging to the 3 classes for model training
+There are 2208 images belonging to the 3 classes for model validation
+There are 551 images belonging to the 3 classes for model testing</code></pre>
+<pre class="highlight"><code class="language-python">def describeData(x, y):
+    """
+    x : is a generator
+    y : labels generator
+    """
+    print('Total number of images: {}'.format(x.samples))
+    print('Number of Normal images: {}'.format(np.sum(y==0)))
+    print('Number of Covid images: {}'.format(np.sum(y==1)))
+    print('Number of Pneumonia images: {}'.format(np.sum(y==2)))
+    print('Pourcentage of positive images: {:.2f}%'.format(100*np.mean(y)))
+    print('Image shape Width, height, channels: {}'.format(x.image_shape))</code></pre>
+<pre class="highlight"><code class="language-python">describeData(train_generator, train_generator.labels)</code></pre>
+<pre class="highlight"><code>Total number of images: 5159
+Number of Normal images: 1832
+Number of Covid images: 718
+Number of Pneumonia images: 2609
+Pourcentage of positive images: 115.06%
+Image shape Width, height, channels: (299, 299, 3)</code></pre>
+<pre class="highlight"><code class="language-python">x, y = train_generator.__getitem__(0)
+plt.imshow(x[0]);</code></pre>
+<pre class="highlight"><code>WARNING:matplotlib.image:Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).</code></pre>
+<p><img alt="png" src="../output_24_1.png" /></p>
+<pre class="highlight"><code class="language-python">plt.xticks(rotation=90)
+plt.bar(x=CLASSES, height=np.mean(train_generator.labels, axis=0))
+plt.title("Frequency of Each Class")
+plt.show()</code></pre>
+<p><img alt="png" src="../output_25_0.png" /></p>
+<h1 id="model">Model<a class="headerlink" href="#model" title="Permanent link"></a></h1>
+<pre class="highlight"><code class="language-python">EPOCHS = 10
+NB_CLASSES = 3  
+input_shape = [299, 299, 3]</code></pre>
+<pre class="highlight"><code class="language-python"># create the base pre-trained model
+base_model = DenseNet121(input_shape=input_shape,weights='imagenet',include_top=False)
+for layers in base_model.layers:
+    layers.trainable=False
+</code></pre>
+<pre class="highlight"><code class="language-python">x = base_model.output
+
+# add a global spatial average pooling layer
+x = GlobalAveragePooling2D()(x)
+
+prediction = Dense(NB_CLASSES, activation='softmax')(x)
+model = Model(inputs=base_model.input, outputs=prediction)</code></pre>
+<pre class="highlight"><code class="language-python">model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])</code></pre>
+<h2 id="model-train">Model train<a class="headerlink" href="#model-train" title="Permanent link"></a></h2>
+<pre class="highlight"><code class="language-python">history = model.fit_generator(train_generator, 
+                              validation_data=validation_generator,
+                              steps_per_epoch=100, 
+                              validation_steps=25, 
+                              epochs = EPOCHS)
+</code></pre>
+<pre class="highlight"><code>Epoch 1/10
+
+
+2024-02-27 10:20:36.453024: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:114] Plugin optimizer for device_type GPU is enabled.
+
+
+100/100 [==============================] - ETA: 0s - loss: 0.5844 - accuracy: 0.7750
+
+2024-02-27 10:20:50.275272: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:114] Plugin optimizer for device_type GPU is enabled.
+
+
+100/100 [==============================] - 21s 151ms/step - loss: 0.5844 - accuracy: 0.7750 - val_loss: 0.2799 - val_accuracy: 0.9237
+Epoch 2/10
+100/100 [==============================] - 12s 119ms/step - loss: 0.2397 - accuracy: 0.9287 - val_loss: 0.2161 - val_accuracy: 0.9312
+Epoch 3/10
+100/100 [==============================] - 12s 124ms/step - loss: 0.1938 - accuracy: 0.9366 - val_loss: 0.1695 - val_accuracy: 0.9513
+Epoch 4/10
+100/100 [==============================] - 13s 125ms/step - loss: 0.1739 - accuracy: 0.9431 - val_loss: 0.1651 - val_accuracy: 0.9500
+Epoch 5/10
+100/100 [==============================] - 13s 125ms/step - loss: 0.1697 - accuracy: 0.9438 - val_loss: 0.1370 - val_accuracy: 0.9513
+Epoch 6/10
+100/100 [==============================] - 14s 138ms/step - loss: 0.1532 - accuracy: 0.9499 - val_loss: 0.1285 - val_accuracy: 0.9525
+Epoch 7/10
+100/100 [==============================] - 14s 135ms/step - loss: 0.1412 - accuracy: 0.9559 - val_loss: 0.1229 - val_accuracy: 0.9550
+Epoch 8/10
+100/100 [==============================] - 13s 134ms/step - loss: 0.1498 - accuracy: 0.9516 - val_loss: 0.1173 - val_accuracy: 0.9613
+Epoch 9/10
+100/100 [==============================] - 13s 132ms/step - loss: 0.1252 - accuracy: 0.9584 - val_loss: 0.1096 - val_accuracy: 0.9625
+Epoch 10/10
+100/100 [==============================] - 14s 138ms/step - loss: 0.1306 - accuracy: 0.9575 - val_loss: 0.1033 - val_accuracy: 0.9675</code></pre>
+<pre class="highlight"><code class="language-python">pd.DataFrame(history.history).plot(figsize=(8, 5))
+plt.grid(True)
+plt.gca().set_ylim(0, 1)
+plt.show()</code></pre>
+<p><img alt="png" src="../output_33_0.png" /></p>
+<pre class="highlight"><code class="language-python">plt.plot(history.history['loss'])
+plt.ylabel("loss")
+plt.xlabel("epoch")
+plt.title("Training Loss Curve")
+plt.show()</code></pre>
+<p><img alt="png" src="../output_34_0.png" /></p>
+<h2 id="model-evaluate">Model evaluate<a class="headerlink" href="#model-evaluate" title="Permanent link"></a></h2>
+<pre class="highlight"><code class="language-python">#evalute the model
+test_loss, test_acc = model.evaluate(test_generator)
+print('Test accuracy:', test_acc)</code></pre>
+<pre class="highlight"><code>18/18 [==============================] - 2s 110ms/step - loss: 0.1814 - accuracy: 0.9292
+Test accuracy: 0.9292196035385132</code></pre>
+<pre class="highlight"><code class="language-python">predicted_vals = model.predict_generator(test_generator, steps = len(test_generator))</code></pre>
+<pre class="highlight"><code class="language-python">auc_rocs = get_roc_curve(CLASSES, predicted_vals, test_generator)</code></pre>
+<p><img alt="png" src="../output_38_0.png" /></p>
+<h2 id="label-prediction">Label Prediction<a class="headerlink" href="#label-prediction" title="Permanent link"></a></h2>
+<pre class="highlight"><code class="language-python">y_pred = model.predict(test_generator)
+y_pred = np.around(y_pred, decimals=0)
+y_test = validation_generator.classes</code></pre>
+<pre class="highlight"><code>18/18 [==============================] - 2s 109ms/step</code></pre>
+<pre class="highlight"><code class="language-python">train_generator.class_indices</code></pre>
+<pre class="highlight"><code>{'0_Normal': 0, '1_Covid19': 1, '2_Pneumonia': 2}</code></pre>
+<pre class="highlight"><code class="language-python">plt.figure(figsize=(20 , 15))
+for i in np.arange(1,6):
+    plt.subplot(5, 5, i)
+    plt.subplots_adjust(hspace = 0.5 , wspace = 0.3)
+    # Pneumonia-Bacterial
+    dir_img = f'{dir_train}/2_Pneumonia/Pneumonia-Bacterial ({i}).jpg'
+    img = cv2.imread(dir_img)
+    plt.imshow(img) 
+    plt.title("Prediction = {} \n Class {}".format(y_pred[i], y_test[i]))</code></pre>
+<p><img alt="png" src="../output_42_0.png" /></p>
+<pre class="highlight"><code class="language-python">plt.figure(figsize=(20 , 15))
+for i in np.arange(1,6):
+    plt.subplot(5, 5, i)
+    plt.subplots_adjust(hspace = 0.5 , wspace = 0.3)
+    # Pneumonia-Bacterial
+    dir_img = f'{dir_train}/0_Normal/Normal ({i}).jpg'
+    img = cv2.imread(dir_img)
+    plt.imshow(img) 
+    plt.title("Prediction = {} \n Class {}".format(y_pred[i], y_test[i]))</code></pre>
+<p><img alt="png" src="../output_43_0.png" /></p>
+<pre class="highlight"><code class="language-python">plt.figure(figsize=(20 , 15))
+for i in np.arange(1,6):
+    plt.subplot(5, 5, i)
+    plt.subplots_adjust(hspace = 0.5 , wspace = 0.3)
+    # Pneumonia-Bacterial
+    dir_img = f'{dir_train}/1_Covid19/COVID-19 ({i}).jpg'
+    img = cv2.imread(dir_img)
+    plt.imshow(img) 
+    plt.title("Prediction = {} \n Class {}".format(y_pred[i], y_test[i]))</code></pre>
+<p><img alt="png" src="../output_44_0.png" /></p>
+<h1 id="model-explain-with-gradcam">Model explain with GradCam<a class="headerlink" href="#model-explain-with-gradcam" title="Permanent link"></a></h1>
+<h2 id="normal-label">Normal Label<a class="headerlink" href="#normal-label" title="Permanent link"></a></h2>
+<pre class="highlight"><code class="language-python">labels_to_show = np.take(CLASSES, np.argsort(auc_rocs)[::-1])[:4]
+labels_to_show</code></pre>
+<pre class="highlight"><code>array(['0_Normal', '2_Pneumonia', '1_Covid19'], dtype='&lt;U11')</code></pre>
+<pre class="highlight"><code class="language-python">dir_img = '/Users/lamine/tensorflow-test/dataset/train/0_Normal' 
+compute_gradcam(model, 'Normal (775).jpg', dir_img, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>2024-02-27 10:27:58.405487: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:114] Plugin optimizer for device_type GPU is enabled.
+
+
+1/1 [==============================] - 3s 3s/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_48_2.png" /></p>
+<pre class="highlight"><code class="language-python">dir_img = '/Users/lamine/tensorflow-test/dataset/train/0_Normal' 
+compute_gradcam(model, 'Normal (2551).jpg', dir_img, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>1/1 [==============================] - 0s 392ms/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_49_1.png" /></p>
+<h2 id="covid19-label">Covid19 label<a class="headerlink" href="#covid19-label" title="Permanent link"></a></h2>
+<pre class="highlight"><code class="language-python">dir_covid = '/Users/lamine/tensorflow-test/dataset/train/1_Covid19'
+compute_gradcam(model, 'COVID-19 (293).jpg', dir_covid, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>1/1 [==============================] - 0s 297ms/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_51_1.png" /></p>
+<pre class="highlight"><code class="language-python">dir_covid = '/Users/lamine/tensorflow-test/dataset/train/1_Covid19'
+compute_gradcam(model, 'COVID-19 (1020).jpg', dir_covid, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>1/1 [==============================] - 0s 32ms/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_52_1.png" /></p>
+<h2 id="pneumonia-label">Pneumonia label<a class="headerlink" href="#pneumonia-label" title="Permanent link"></a></h2>
+<pre class="highlight"><code class="language-python">dir_img = '/Users/lamine/tensorflow-test/dataset/train/2_Pneumonia'
+compute_gradcam(model, 'Pneumonia-Viral (291).jpg', dir_img, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>1/1 [==============================] - 0s 32ms/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_54_1.png" /></p>
+<pre class="highlight"><code class="language-python">dir_img = '/Users/lamine/tensorflow-test/dataset/train/2_Pneumonia'
+compute_gradcam(model, 'Pneumonia-Viral (286).jpg', dir_img, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>1/1 [==============================] - 0s 32ms/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_55_1.png" /></p>
+<pre class="highlight"><code class="language-python">dir_img = '/Users/lamine/tensorflow-test/dataset/train/2_Pneumonia'
+compute_gradcam(model, 'Pneumonia-Bacterial (2900).jpg', dir_img, CLASSES, labels_to_show, layer_name='bn')</code></pre>
+<pre class="highlight"><code>1/1 [==============================] - 0s 32ms/step
+Loading original image
+Generating gradcam for class 0_Normal
+Generating gradcam for class 1_Covid19
+Generating gradcam for class 2_Pneumonia</code></pre>
+<p><img alt="png" src="../output_56_1.png" /></p>
+<pre class="highlight"><code class="language-python"></code></pre>
+<pre class="highlight"><code class="language-python"></code></pre>
+<pre class="highlight"><code class="language-python"></code></pre>
+<pre class="highlight"><code class="language-python"></code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2024 <a href="https://www.linkedin.com/in/lamine-toure">Lamine TOURE</a>, Maintained by <a href="https://github.com/LamineTourelab">Lamine TOURE</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../../js/jquery-3.6.0.min.js"></script>
+        <script src="../../../../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "../../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../../js/base.js"></script>
+        <script src="../../../../js/base.js"></script>
+        <script src="../../../../js/bootstrap.min.js"></script>
+        <script src="../../../../js/jquery-3.6.0.min.js"></script>
+
+        <div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
